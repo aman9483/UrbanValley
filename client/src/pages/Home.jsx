@@ -9,14 +9,18 @@ import Footer from "../components/Footer";
 import Features from "../components/Features";
 import Team from "../components/Team";
 import FAQ from "../components/FAQ";
+import ProductCollection from "../components/ProductCollection";
+import Stats from "../components/Stats";
 
 const Home = () => {
    return (
       <>
          <Navbar />
          <Hero />
+         <ProductCollection/>
          <Services/>
          <FoodItems />
+         <Stats/>
          <Features />
          <Team />
          <FAQ />

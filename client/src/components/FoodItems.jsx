@@ -146,9 +146,9 @@ const ClothingShop = () => {
           <ClothingCard
             key={clothing._id} // Ensure you're using the correct identifier
             id={clothing._id} // Use _id from MongoDB
-            name={clothing.ProductName} // Map to your model's properties
+            name={clothing.productName} // Map to your model's properties
             price={clothing.price}
-            desc={clothing.desc}
+            desc={clothing.description}
             rating={clothing.rating}
             img={clothing.image} // Ensure this matches your model's image field
           />

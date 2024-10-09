@@ -1,51 +1,63 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { SignedIn, SignedOut, SignIn, SignUp, useClerk } from '@clerk/clerk-react';
 import { toast, ToastContainer } from 'react-toastify'; // Import Toast components
+import { FaGoogle, FaFacebook } from 'react-icons/fa'; // Import icons
 import 'react-toastify/dist/ReactToastify.css'; // Import toast styles
 
 const SignInPage = () => {
    const [isSignIn, setIsSignIn] = useState(true); // State to toggle between SignIn and SignUp
+   const [email, setEmail] = useState("");
+   const [password, setPassword] = useState("");
+   const [name, setName] = useState(""); // For SignUp
    const navigate = useNavigate(); // Use navigate hook
-   const clerk = useClerk(); // Use Clerk context
 
    const toggleForm = () => {
       setIsSignIn(!isSignIn);
    };
 
-   useEffect(() => {
-      // Redirect if signed in
-      if (clerk.user) {
-         navigate("/menu");
-      }
-   }, [clerk.user, navigate]); // Run effect when user state changes
-
    const handleSignInSuccess = () => {
       toast.success("Successfully signed in!", { position: "top-right" }); // Show success toast
-      // Navigate to /menu in the effect
+      navigate("/menu"); // Navigate to /menu on successful sign-in
+   };
+
+   const handleGoogleLogin = () => {
+      // Handle Google login logic here
+      toast.info("Google login is currently not implemented.", { position: "top-right" });
+   };
+
+   const handleFacebookLogin = () => {
+      // Handle Facebook login logic here
+      toast.info("Facebook login is currently not implemented.", { position: "top-right" });
+   };
+
+   const handleSubmit = (e) => {
+      e.preventDefault();
+      // Add logic for sign-in or sign-up
+      handleSignInSuccess(); // Simulate successful sign-in for now
    };
 
    return (
       <>
          <Navbar />
 
-         <section>
+         <section className="bg-gray-100 py-10">
             <div className="grid grid-cols-1 lg:grid-cols-2">
                <div className="flex items-center justify-center px-4 py-10 sm:px-6 sm:py-16 lg:px-8 lg:py-24">
-                  <div className="xl:mx-auto xl:w-full xl:max-w-sm 2xl:max-w-md">
-                     <h2 className="text-3xl font-bold leading-tight text-black sm:text-4xl">
+                  <div className="xl:mx-auto xl:w-full xl:max-w-sm 2xl:max-w-md bg-white p-10 "> {/* Increased padding for a taller form */}
+                     <h2 className="text-3xl font-bold leading-tight text-black sm:text-4xl mb-6">
                         {isSignIn ? "Sign in" : "Create Account"}
                      </h2>
+
                      <p className="mt-2 text-sm text-gray-600">
                         {isSignIn ? (
                            <>Don&apos;t have an account?{" "}
                               <button
                                  onClick={toggleForm}
-                                 className="font-semibold text-black transition-all duration-200 hover:underline">
+                                 className="font-semibold text-blue-500 transition-all duration-200 hover:underline">
                                  Create a free account
                               </button>
                            </>
@@ -53,112 +65,75 @@ const SignInPage = () => {
                            <>Already have an account?{" "}
                               <button
                                  onClick={toggleForm}
-                                 className="font-semibold text-black transition-all duration-200 hover:underline">
+                                 className="font-semibold text-blue-500 transition-all duration-200 hover:underline">
                                  Sign in
                               </button>
                            </>
                         )}
                      </p>
 
-                     <SignedIn>
-                        <p className="text-green-500">You are signed in!</p>
-                     </SignedIn>
-
-                     <SignedOut>
-                        <div className="mt-5">
-                           {isSignIn ? (
-                              <SignIn 
-                                 appearance={{
-                                    layout: {
-                                       logo: <img src="your-logo-url" alt="Logo" className="h-12 mb-4" />, // Optional: Add your logo
-                                       title: "Welcome Back!",
-                                       primaryButton: {
-                                          style: {
-                                             backgroundColor: "#2563EB", // Custom background color for the primary button
-                                             color: "#fff", // Text color
-                                             borderRadius: "8px", // Rounded corners
-                                             padding: "12px 16px", // More padding for larger button
-                                             fontSize: "1.125rem", // Larger font size
-                                          },
-                                       },
-                                    },
-                                    elements: {
-                                       formField: {
-                                          style: {
-                                             border: "1px solid #ddd", // Lighter border for input fields
-                                             borderRadius: "8px", // Rounded corners
-                                             padding: "15px", // Increased padding for input fields
-                                             marginBottom: "12px", // Space between fields
-                                          },
-                                       },
-                                       input: {
-                                          style: {
-                                             fontSize: "1rem", // Font size for input fields
-                                             color: "#333", // Input text color
-                                             height: "50px", // Height for a larger input field
-                                          },
-                                       },
-                                       button: {
-                                          style: {
-                                             fontSize: "1rem", // Font size for buttons
-                                             padding: "12px 16px", // Increased padding for buttons
-                                          },
-                                       },
-                                    },
-                                 }}
-                                 onSignIn={handleSignInSuccess} // Handle sign-in success
-                              />
-                           ) : (
-                              <SignUp
-                                 appearance={{
-                                    layout: {
-                                       logo: <img src="your-logo-url" alt="Logo" className="h-12 mb-4" />, // Optional: Add your logo
-                                       title: "Join Us!",
-                                       primaryButton: {
-                                          style: {
-                                             backgroundColor: "#2563EB", // Custom background color for the primary button
-                                             color: "#fff", // Text color
-                                             borderRadius: "8px", // Rounded corners
-                                             padding: "12px 16px", // More padding for larger button
-                                             fontSize: "1.125rem", // Larger font size
-                                          },
-                                       },
-                                    },
-                                    elements: {
-                                       formField: {
-                                          style: {
-                                             border: "1px solid #ddd", // Lighter border for input fields
-                                             borderRadius: "8px", // Rounded corners
-                                             padding: "15px", // Increased padding for input fields
-                                             marginBottom: "12px", // Space between fields
-                                          },
-                                       },
-                                       input: {
-                                          style: {
-                                             fontSize: "1rem", // Font size for input fields
-                                             color: "#333", // Input text color
-                                             height: "50px", // Height for a larger input field
-                                          },
-                                       },
-                                       button: {
-                                          style: {
-                                             fontSize: "1rem", // Font size for buttons
-                                             padding: "12px 16px", // Increased padding for buttons
-                                          },
-                                       },
-                                    },
-                                 }}
+                     <div className="mt-5">
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                           {!isSignIn && (
+                              <input
+                                 type="text"
+                                 placeholder="Full Name"
+                                 value={name}
+                                 onChange={(e) => setName(e.target.value)}
+                                 className="w-full bg-gray-200 p-3 rounded-lg" // Changed background color and removed border
+                                 required
                               />
                            )}
-                        </div>
-                     </SignedOut>
+                           <input
+                              type="email"
+                              placeholder="Email"
+                              value={email}
+                              onChange={(e) => setEmail(e.target.value)}
+                              className="w-full bg-gray-200 p-3 rounded-lg" // Changed background color and removed border
+                              required
+                           />
+                           <input
+                              type="password"
+                              placeholder="Password"
+                              value={password}
+                              onChange={(e) => setPassword(e.target.value)}
+                              className="w-full bg-gray-200 p-3 rounded-lg" // Changed background color and removed border
+                              required
+                           />
+                           <button
+                              type="submit"
+                              className="w-full bg-black text-white rounded-lg p-3 hover:bg-gray-800 transition-all duration-200"> {/* Black button with white text */}
+                              {isSignIn ? "Sign In" : "Sign Up"}
+                           </button>
+                        </form>
+                     </div>
+
+                     <div className="flex items-center justify-center mt-4">
+                        <div className="w-full " />
+                        <span className="absolute bg-white px-4 text-gray-600">or</span>
+                     </div>
+
+                     <div className="flex justify-between mt-4">
+                        <button 
+                           onClick={handleGoogleLogin} 
+                           className="flex items-center justify-center w-full bg-black text-white rounded-lg p-3 hover:bg-gray-800 transition-all duration-200 mr-2"> {/* Black button with white text */}
+                           <FaGoogle className="mr-2 text-white" /> {/* Changed icon color to black */}
+                           Login with Google
+                        </button>
+                        <button 
+                           onClick={handleFacebookLogin} 
+                           className="flex items-center justify-center w-full bg-black text-white rounded-lg p-3 hover:bg-gray-800 transition-all duration-200 ml-2"> {/* Black button with white text */}
+                           <FaFacebook className="mr-2 text-white" /> {/* Changed icon color to black */}
+                           Login with Facebook
+                        </button>
+                     </div>
                   </div>
                </div>
                <div className="w-full h-full">
                   <img
                      className="object-cover w-full h-full mx-auto rounded-md"
                      src="https://images.unsplash.com/photo-1630673245362-f69d2b93880e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80"
-                     alt=""
+                     alt="Login illustration"
                   />
                </div>
             </div>

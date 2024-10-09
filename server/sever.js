@@ -22,9 +22,10 @@ mongoose.connect(process.env.Mongo_url)
     .catch(error => console.error('Database Connection Error:', error));
 
 
-// // API works here
 const ProductRoute = require('./Routes/ProductRoutes');
+const UserRoute = require('./Routes/userRoutes')
 app.use('/api/v1', ProductRoute);
+app.use('/api/v1/users', UserRoute);
 
 
 

@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Menu, X, Home, Info, List } from "lucide-react"; // Icons for menu items
 import { FaShoppingCart } from "react-icons/fa";
-import { useUser, UserButton } from '@clerk/clerk-react';
 
 const Navbar = () => {
    const menuItems = [
@@ -24,8 +23,7 @@ const Navbar = () => {
    ];
 
    const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-   const [cartCount, setCartCount] = React.useState(0); // Cart item count state
-   const { isSignedIn } = useUser(); // Check if the user is signed in
+   const [cartCount, setCartCount] = React.useState(0); 
 
    const toggleMenu = () => {
       setIsMenuOpen(!isMenuOpen);
@@ -72,18 +70,14 @@ const Navbar = () => {
 
             {/* User Profile Button or Sign In Button */}
             <div className="hidden lg:block">
-               {isSignedIn ? (
-                  <UserButton />
-               ) : (
-                  <Link to={"/signIn"}>
-                     <button
-                        type="button"
-                        className="w-full px-3 py-2 text-sm font-semibold text-black rounded-md shadow-sm bg-yellow-500 hover:bg-black/80 hover:text-white transition duration-300"
-                     >
-                        Sign in
-                     </button>
-                  </Link>
-               )}
+               <Link to={"/signIn"}>
+                  <button
+                     type="button"
+                     className="w-full px-3 py-2 text-sm font-semibold text-black rounded-md shadow-sm bg-yellow-500 hover:bg-black/80 hover:text-white transition duration-300"
+                  >
+                     Sign in
+                  </button>
+               </Link>
             </div>
 
             {/* Mobile Menu Toggle Button */}
@@ -123,20 +117,16 @@ const Navbar = () => {
                            </nav>
                         </div>
 
-                        {/* User Profile Button or Sign In Button for Mobile View */}
+                        {/* Sign In Button for Mobile View */}
                         <div className="mt-4">
-                           {isSignedIn ? (
-                              <UserButton />
-                           ) : (
-                              <Link to={"/signIn"}>
-                                 <button
-                                    type="button"
-                                    className="w-full px-3 py-2 text-sm font-semibold text-black rounded-md shadow-sm bg-yellow-500 hover:bg-black/80 hover:text-white transition duration-300"
-                                 >
-                                    Sign in
-                                 </button>
-                              </Link>
-                           )}
+                           <Link to={"/signIn"}>
+                              <button
+                                 type="button"
+                                 className="w-full px-3 py-2 text-sm font-semibold text-black rounded-md shadow-sm bg-yellow-500 hover:bg-black/80 hover:text-white transition duration-300"
+                              >
+                                 Sign in
+                              </button>
+                           </Link>
                         </div>
                      </div>
                   </div>
