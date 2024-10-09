@@ -2,6 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Menu, X, Home, Info, List } from "lucide-react"; // Icons for menu items
 import { FaShoppingCart } from "react-icons/fa";
+import { useSelector, useDispatch } from "react-redux"; // Import useSelector and useDispatch
+import { LogoutUser } from '../redux/action/user'; // Import your logout action
 
 const Navbar = () => {
    const menuItems = [
@@ -24,9 +26,17 @@ const Navbar = () => {
 
    const [isMenuOpen, setIsMenuOpen] = React.useState(false);
    const [cartCount, setCartCount] = React.useState(0); 
+   const [isHovering, setIsHovering] = React.useState(false); // State to track hover status
+   const user = useSelector((state) => state.user); // Get user state from Redux
+   const dispatch = useDispatch(); // Use dispatch hook
 
    const toggleMenu = () => {
       setIsMenuOpen(!isMenuOpen);
+   };
+
+   const handleLogout = () => {
+      dispatch(LogoutUser()); // Dispatch logout action
+      setIsHovering(false); // Reset hover state
    };
 
    return (
@@ -69,15 +79,33 @@ const Navbar = () => {
             </Link>
 
             {/* User Profile Button or Sign In Button */}
-            <div className="hidden lg:block">
-               <Link to={"/signIn"}>
-                  <button
-                     type="button"
-                     className="w-full px-3 py-2 text-sm font-semibold text-black rounded-md shadow-sm bg-yellow-500 hover:bg-black/80 hover:text-white transition duration-300"
-                  >
-                     Sign in
-                  </button>
-               </Link>
+            <div className="hidden lg:block relative" 
+                 onMouseEnter={() => setIsHovering(true)} 
+                 onMouseLeave={() => setIsHovering(false)}>
+               {user ? ( // Check if user is logged in
+                  <>
+                     <span className="font-semibold text-black">{user.FullName}</span>
+                     {isHovering && (
+                        <div className="absolute z-10 w-40 p-2 bg-white shadow-lg mt-1 rounded-md">
+                           <button
+                              type="button"
+                              onClick={handleLogout}
+                              className="flex items-center space-x-2 p-2 w-full text-left text-gray-800 hover:bg-gray-100 transition duration-300">
+                              <span className="text-red-500">Logout</span>
+                           </button>
+                        </div>
+                     )}
+                  </>
+               ) : (
+                  <Link to={"/signIn"}>
+                     <button
+                        type="button"
+                        className="w-full px-3 py-2 text-sm font-semibold text-black rounded-md shadow-sm bg-yellow-500 hover:bg-black/80 hover:text-white transition duration-300"
+                     >
+                        Sign in
+                     </button>
+                  </Link>
+               )}
             </div>
 
             {/* Mobile Menu Toggle Button */}
