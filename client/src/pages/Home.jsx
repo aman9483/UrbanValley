@@ -2,7 +2,7 @@ import React from "react";
 
 //Components
 import Navbar from "../components/Navbar";
-import FoodItems from "../components/FoodItems";
+import ClothingItems from "../components/ClotingItems";
 import Hero from "../components/Hero";
 import Services from "../components/services";
 import Footer from "../components/Footer";
@@ -19,7 +19,7 @@ const Home = () => {
          <Hero />
          <ProductCollection/>
          <Services/>
-         <FoodItems />
+         <ClothingItems />
          <Stats/>
          <Features />
          <Team />

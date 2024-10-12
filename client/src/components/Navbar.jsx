@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Menu, X, Home, Info, List } from "lucide-react"; // Icons for menu items
 import { FaShoppingCart } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux"; // Import useSelector and useDispatch
@@ -27,16 +27,19 @@ const Navbar = () => {
    const [isMenuOpen, setIsMenuOpen] = React.useState(false);
    const [cartCount, setCartCount] = React.useState(0); 
    const [isHovering, setIsHovering] = React.useState(false); // State to track hover status
-   const user = useSelector((state) => state.user); // Get user state from Redux
-   const dispatch = useDispatch(); // Use dispatch hook
+   const user = useSelector((state) => state.userAuth.user); // Get user state from Redux
+   const dispatch = useDispatch(); 
+   const navigate = useNavigate();
 
    const toggleMenu = () => {
       setIsMenuOpen(!isMenuOpen);
    };
 
    const handleLogout = () => {
-      dispatch(LogoutUser()); // Dispatch logout action
-      setIsHovering(false); // Reset hover state
+      dispatch(LogoutUser()); // Dispatch your logout action
+      dispatch({ type: CLEAR_ERRORS }); // Clear any existing errors
+      localStorage.removeItem('user'); // Clear user from local storage
+      navigate('/'); // Navigate to the home page after logging out
    };
 
    return (
@@ -82,9 +85,9 @@ const Navbar = () => {
             <div className="hidden lg:block relative" 
                  onMouseEnter={() => setIsHovering(true)} 
                  onMouseLeave={() => setIsHovering(false)}>
-               {user ? ( // Check if user is logged in
+               {user && user.FullName ? ( // Check if user is logged in and has a name
                   <>
-                     <span className="font-semibold text-black">{user.FullName}</span>
+                     <span className="font-semibold text-black cursor-pointer">{user.FullName}</span>
                      {isHovering && (
                         <div className="absolute z-10 w-40 p-2 bg-white shadow-lg mt-1 rounded-md">
                            <button
@@ -97,7 +100,7 @@ const Navbar = () => {
                      )}
                   </>
                ) : (
-                  <Link to={"/signIn"}>
+                  <Link to={"/login"}>
                      <button
                         type="button"
                         className="w-full px-3 py-2 text-sm font-semibold text-black rounded-md shadow-sm bg-yellow-500 hover:bg-black/80 hover:text-white transition duration-300"
@@ -146,16 +149,18 @@ const Navbar = () => {
                         </div>
 
                         {/* Sign In Button for Mobile View */}
-                        <div className="mt-4">
-                           <Link to={"/signIn"}>
-                              <button
-                                 type="button"
-                                 className="w-full px-3 py-2 text-sm font-semibold text-black rounded-md shadow-sm bg-yellow-500 hover:bg-black/80 hover:text-white transition duration-300"
-                              >
-                                 Sign in
-                              </button>
-                           </Link>
-                        </div>
+                        {!user && (
+                           <div className="mt-4">
+                              <Link to={"/register"}>
+                                 <button
+                                    type="button"
+                                    className="w-full px-3 py-2 text-sm font-semibold text-black rounded-md shadow-sm bg-yellow-500 hover:bg-black/80 hover:text-white transition duration-300"
+                                 >
+                                    Sign in
+                                 </button>
+                              </Link>
+                           </div>
+                        )}
                      </div>
                   </div>
                </div>

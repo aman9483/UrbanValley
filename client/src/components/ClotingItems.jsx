@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../redux/action/product"; // Import the action to fetch products
-import ClothingCard from "./FoodCard"; // Update to your ClothingCard component
+import ClothingCard from "./ClotingCard"; // Update to your ClothingCard component
 
 const filterOptions = {
   categories: ["Men", "Women", "Kids"],

@@ -6,12 +6,12 @@ import "./index.css";
 //pages
 import Home from "./pages/Home";
 import Error from "./pages/Error";
-
 import About from "./pages/About";
 import Menu from "./pages/Menu";
 import Cart from "./pages/Cart";
-import SignIn from "./pages/SignIn";
 import Success from "./pages/Success";
+import Register from "./pages/register";
+import Login from "./pages/login";
 
 const App = () => {
    return (
@@ -21,7 +21,8 @@ const App = () => {
             <Route exact path="/about" element={<About />} />
             <Route exact path="/menu" element={<Menu />} />
             <Route exact path="/cart" element={<Cart />} />
-            <Route exact path="/signIn" element={<SignIn />} />
+            <Route exact path="/register" element={<Register/>} />
+            <Route exact path="/login" element={<Login/>} />
             <Route exact path="/*" element={<Error />} />
             <Route
                exact

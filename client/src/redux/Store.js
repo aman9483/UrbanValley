@@ -8,7 +8,7 @@ const store = configureStore({
   reducer: rootReducer, // Root reducer that combines all slices
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware(), // Default middleware already includes thunk
-  devTools: process.env.NODE_ENV !== 'production', // Enable DevTools in development mode
+  devTools: process.env.NODE_ENV !== 'production', 
 });
 
 export default store;
