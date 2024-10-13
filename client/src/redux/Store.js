@@ -1,14 +1,13 @@
-// src/redux/store.js
+import { configureStore } from "@reduxjs/toolkit";
+import CartSlice from "./slices/CartSlice";
+import { productReducer } from "./reducers/product";
+import {userReducer} from "./reducers/user";
 
-import { configureStore } from '@reduxjs/toolkit';
-import rootReducer from './reducers/rootReducer.js';
-
-// Create the Redux store using @reduxjs/toolkit's configureStore
-const store = configureStore({
-  reducer: rootReducer, // Root reducer that combines all slices
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware(), // Default middleware already includes thunk
-  devTools: process.env.NODE_ENV !== 'production', 
+const Store = configureStore({
+   reducer: {
+    productList : productReducer,
+    userAuth: userReducer,
+    cart: CartSlice,
+   },
 });
-
-export default store;
+export default Store;

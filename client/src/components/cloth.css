@@ -1,0 +1,13 @@
+.btn{
+
+    background-color: orange;
+    border-radius: 10px;
+    height: 40px;
+    text-align: center;
+}
+.btn:hover{
+
+     background-color: blue;
+     transition: 1s linear;
+     color: white;
+}

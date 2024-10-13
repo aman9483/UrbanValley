@@ -31,6 +31,8 @@ export const UPDATE_password_SUCCESS = "UPDATE_password_SUCCESS"
 export const UPDATE_password_FAIL = "UPDATE_password_FAIL"
 
 export const PROFILE_FAIL = " PROFILE_FAIL"
+export const FETCH_USER_FAILURE = 'FETCH_USER_FAILURE'; 
+export const FETCH_USER_LOGOUT = 'FETCH_USER_LOGOUT'
 
 export const ALL_USERS_REQUEST = "ALL_USERS_REQUEST";
 export const ALL_USERS_SUCCESS = "ALL_USERS_SUCCESS";

@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../redux/action/product"; // Import the action to fetch products
 import ClothingCard from "./ClotingCard"; // Update to your ClothingCard component
+import {  ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const filterOptions = {
   categories: ["Men", "Women", "Kids"],
@@ -144,16 +147,18 @@ const ClothingShop = () => {
       <div className="flex flex-wrap justify-center gap-10 mt-4">
         {filteredData.map((clothing) => (
           <ClothingCard
-            key={clothing._id} // Ensure you're using the correct identifier
-            id={clothing._id} // Use _id from MongoDB
-            name={clothing.productName} // Map to your model's properties
+            key={clothing._id}
+            id={clothing._id} 
+            name={clothing.productName} 
             price={clothing.price}
             desc={clothing.description}
             rating={clothing.rating}
-            img={clothing.image} // Ensure this matches your model's image field
+            img={clothing.image} 
+            sizes={['XS', 'S', 'M', 'L', 'XL']}
           />
         ))}
       </div>
+      <ToastContainer />
     </div>
   );
 };

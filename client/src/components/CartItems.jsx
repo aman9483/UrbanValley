@@ -8,9 +8,9 @@ import {
    removeFromCart,
    incrementQty,
    decrementQty,
-} from "../redux/slices/CartSlice";
+} from "../redux/slices/CartSlice"
 
-const CartItems = ({ id, img, name, price, rating, qty }) => {
+const CartItems = ({ id, img, name, price, rating, qty , size}) => {
    const dispatch = useDispatch();
 
    return (
@@ -42,6 +42,8 @@ const CartItems = ({ id, img, name, price, rating, qty }) => {
                         <AiFillStar className="mr-1 text-base text-yellow lg:text-lg" />
                         {rating}
                      </div>
+
+                     <p className="text-sm text-gray-500">Size: {size}</p>
 
                      {/* Remove from Cart */}
                      <div className="flex justify-between text-sm ">

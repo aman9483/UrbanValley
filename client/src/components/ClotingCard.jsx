@@ -1,20 +1,68 @@
-// FoodCard.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AiFillStar } from "react-icons/ai";
 import { AiOutlineShoppingCart } from "react-icons/ai"; // Import cart icon
-import { useDispatch } from "react-redux";
-import { addToCart } from "../redux/slices/CartSlice";
-import { motion } from "framer-motion"; // Import Framer Motion
+import { useDispatch, useSelector } from "react-redux"; // Import hooks for Redux
+import { addToCart, removeFromCart } from "../redux/slices/cartSlice"; // Ensure this path is correct
+import { toast } from 'react-toastify'; // Correct import for toast notifications
+import 'react-toastify/dist/ReactToastify.css'; // Import CSS for toast notifications
+import './cloth.css'; // Ensure you have the necessary CSS for styling
 
-const FoodCard = ({ id, name, price, desc, img, rating, handleToast }) => {
+const FoodCard = ({ id, name, price, desc, img, rating, sizes }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false); // State to manage loading
+  const [selectedSize, setSelectedSize] = useState(""); // State for selected size
+  const [showSizeDropdown, setShowSizeDropdown] = useState(false); // State to manage dropdown visibility
 
-  const handleAddToCart = () => {
-    setLoading(true);
-    dispatch(addToCart({ id, name, price, rating, img, qty: 1 }));
-    handleToast(name);
-    setTimeout(() => setLoading(false), 1000); // Simulate loading time
+  // Use useSelector to check if the item is in the cart
+  const cartItems = useSelector((state) => state.cart.cart);
+  const isInCart = cartItems.some((item) => item.id === id); // Check if the item is in the cart
+
+  // Effect to add to cart automatically when size is selected
+  useEffect(() => {
+    if (selectedSize && !isInCart) {
+      handleAddToCart();
+    }
+  }, [selectedSize]); // Dependency on selectedSize
+
+  const handleAddToCart = async () => {
+    if (!selectedSize) {
+      toast.warn("Please select a size before adding to cart.", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+      return;
+    }
+
+    setLoading(true); // Set loading state to true
+
+    try {
+      await dispatch(addToCart({ id, name, price, rating, img, qty: 1, size: selectedSize }));
+      toast.success(`${name} successfully added to cart!`, {
+        position: toast.POSITION.TOP_RIGHT,
+      }); // Show success toast notification
+      setShowSizeDropdown(false); // Close dropdown after adding to cart
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      toast.error("Failed to add to cart."); // Show error toast notification
+    } finally {
+      setLoading(false); // Reset loading state
+      setSelectedSize(""); // Reset selected size
+    }
+  };
+
+  const handleRemoveFromCart = async () => {
+    setLoading(true); // Set loading state to true
+
+    try {
+      await dispatch(removeFromCart({ id }));
+      toast.info(`${name} removed from cart!`, {
+        position: toast.POSITION.TOP_RIGHT,
+      }); // Show info toast notification
+    } catch (error) {
+      console.error("Error removing from cart:", error);
+      toast.error("Failed to remove from cart."); // Show error toast notification
+    } finally {
+      setLoading(false); // Reset loading state
+    }
   };
 
   return (
@@ -22,7 +70,7 @@ const FoodCard = ({ id, name, price, desc, img, rating, handleToast }) => {
       <img
         src={img}
         alt={name}
-        className="w-full h-[350px] object-cover rounded-lg mb-2 transition-transform duration-300 transform hover:scale-110" // Increased image height
+        className="w-full h-[350px] object-cover rounded-lg mb-2 transition-transform duration-300 transform hover:scale-110"
       />
       <div className="flex justify-between text-sm">
         <h2 className="text-lg font-semibold">{name}</h2>
@@ -34,38 +82,63 @@ const FoodCard = ({ id, name, price, desc, img, rating, handleToast }) => {
           <AiFillStar className="mr-1" /> {rating}
         </span>
 
-        {/* Add to Cart and Buy Now */}
+        {/* Size selection dropdown */}
+        {showSizeDropdown && (
+          <div className="relative">
+            {Array.isArray(sizes) && sizes.length > 0 && (
+              <select
+                value={selectedSize}
+                onChange={(e) => setSelectedSize(e.target.value)}
+                className="p-1 border border-gray-300 rounded bg-white text-gray-700"
+              >
+                <option value="">Select Size</option>
+                {sizes.map((size) => (
+                  <option key={size} value={size}>
+                    {size}
+                  </option>
+                ))}
+              </select>
+            )}
+          </div>
+        )}
+
+        {/* Add to Cart or Remove from Cart button */}
         <div className="flex gap-2">
           {loading ? (
-            <motion.div
-              className="loader w-6 h-6 rounded-full border-4 border-t-transparent border-yellow-500 animate-spin"
-              // Add your loader styling here
-              initial={{ rotate: 0 }}
-              animate={{ rotate: 360 }}
-              transition={{ repeat: Infinity, duration: 1 }}
-            />
+            <div className="loader w-6 h-6 rounded-full border-4 border-t-transparent border-yellow-500 animate-spin" />
+          ) : isInCart ? (
+            <button
+              onClick={handleRemoveFromCart}
+              className="p-1 text-sm text-black bg-red-500 hover:bg-red-600 transition duration-300 flex items-center rounded"
+            >
+              Remove from cart
+            </button>
           ) : (
-            <>
-              <button
-                onClick={handleAddToCart}
-                className="p-1 text-sm text-white rounded-lg bg-yellow-500 hover:bg-yellow-600 transition duration-300 flex items-center"
-              >
-                <AiOutlineShoppingCart className="mr-1" /> Add to cart
-              </button>
-              <button
-                onClick={() => {
-                  handleToast(name); // Replace with actual buy now logic
-                }}
-                className="p-1 text-sm text-black rounded-lg bg-green-500 hover:bg-green-600 transition duration-300"
-              >
-                Buy Now
-              </button>
-            </>
+            <button
+              onClick={() => setShowSizeDropdown(!showSizeDropdown)} // Toggle size dropdown on button click
+              className="p-1 text-sm text-black bg-yellow-400 hover:bg-yellow-600 transition duration-300 flex items-center rounded"
+            >
+              <AiOutlineShoppingCart className="mr-1" /> Add to cart
+            </button>
           )}
         </div>
       </div>
+
+      {showSizeDropdown && !isInCart && (
+        <button
+          onClick={handleAddToCart}
+          className="mt-2 p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300"
+        >
+          Confirm Size and Add to Cart
+        </button>
+      )}
     </div>
   );
+};
+
+// Set default sizes
+FoodCard.defaultProps = {
+  sizes: ['S', 'M', 'L', 'XL'], // Default sizes
 };
 
 export default FoodCard;

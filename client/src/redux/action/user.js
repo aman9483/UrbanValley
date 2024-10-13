@@ -1,6 +1,18 @@
 import axios from 'axios';
 import { toast } from 'react-toastify'; // Import toast
-import { ALL_login_FAILURE, ALL_login_REQUESTS, ALL_login_SUCCESS, CLEAR_ERRORS, ALL_Register_REQUESTS, ALL_Register_SUCCESS, ALL_Register_FAILURE , LOAD_USER_REQUEST, LOAD_USER_SUCCESS, LOAD_USER_FAIL, LOGOUT_SUCCESS, LOGOUT_FAIL, PROFILE_REQUEST, PROFILE_SUCCESS, PROFILE_FAIL, UPDATE_password_SUCCESS, UPDATE_password_REQUEST, UPDATE_password_FAIL,USER_DETAILS_REQUEST, USER_DETAILS_SUCCESS, USER_DETAILS_FAIL, UPDATE_USER_REQUEST, UPDATE_USER_SUCCESS, UPDATE_USER_FAIL, DELETE_USER_REQUEST, DELETE_USER_SUCCESS, DELETE_USER_FAIL } from '../constant/user';
+import {
+  ALL_login_FAILURE,
+  ALL_login_REQUESTS,
+  ALL_login_SUCCESS,
+  CLEAR_ERRORS,
+  ALL_Register_REQUESTS,
+  ALL_Register_SUCCESS,
+  ALL_Register_FAILURE,
+  LOGOUT_SUCCESS,
+  LOGOUT_FAIL,
+  FETCH_USER_LOGOUT,
+  FETCH_USER_FAILURE
+} from '../constant/user';
 
 // Base URL for API
 const url = "http://localhost:8000";
@@ -12,21 +24,23 @@ export const login = (email, password) => async (dispatch) => {
 
     const config = { headers: { "Content-Type": "application/json" } };
 
-    const { data } = await axios.post(
-      `${url}/api/v1/users/login`,
-      { email, password },
-      config
-    );
+    const { data } = await axios.post(`${url}/api/v1/users/login`, { email, password }, config);
 
     dispatch({ type: ALL_login_SUCCESS, payload: data.user });
 
     // Save user data to local storage
     localStorage.setItem('user', JSON.stringify(data.user));
 
+    // Show success toast
+    toast.success('Login successful!');
+
     // Return success and user data to the component
     return { success: true, user: data.user };
   } catch (error) {
     dispatch({ type: ALL_login_FAILURE, payload: error.response.data.message });
+
+    // Show error toast
+    toast.error(error.response.data.message);
 
     // Return failure and error message to the component
     return { success: false, message: error.response.data.message };
@@ -47,13 +61,16 @@ export const register = (userData) => async (dispatch) => {
     // Save user data to local storage
     localStorage.setItem('user', JSON.stringify(data.user));
 
+    // Show success toast
+    toast.success('Registration successful!');
+
     // Return success and user data to the component
     return { success: true, user: data.user };
   } catch (error) {
-    dispatch({
-      type: ALL_Register_FAILURE,
-      payload: error.response.data.message,
-    });
+    dispatch({ type: ALL_Register_FAILURE, payload: error.response.data.message });
+
+    // Show error toast
+    toast.error(error.response.data.message);
 
     // Return failure and error message to the component
     return { success: false, message: error.response.data.message };
@@ -62,11 +79,12 @@ export const register = (userData) => async (dispatch) => {
 
 // Logout Action
 export const logout = () => (dispatch) => {
-  dispatch({ type: ALL_LOGOUT }); // Ensure you have this action defined
+  dispatch({ type: LOGOUT_SUCCESS }); // Ensure you have this action defined
   localStorage.removeItem('user'); // Clear user from local storage
+
+  // Show success toast
+  toast.success('Logout successful! Come back soon!');
 };
-
-
 
 // Action Creator for Logging out a User
 export const LogoutUser = () => async (dispatch) => {
