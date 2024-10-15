@@ -12,6 +12,7 @@ import Cart from "./pages/Cart";
 import Success from "./pages/Success";
 import Register from "./pages/register";
 import Login from "./pages/login";
+import Billing from "./pages/checkout"
 
 const App = () => {
    return (
@@ -23,6 +24,7 @@ const App = () => {
             <Route exact path="/cart" element={<Cart />} />
             <Route exact path="/register" element={<Register/>} />
             <Route exact path="/login" element={<Login/>} />
+            <Route exact path="/cart/checkout" element={<Billing/>} />
             <Route exact path="/*" element={<Error />} />
             <Route
                exact

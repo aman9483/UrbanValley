@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom"; // Use useNavigate instead of useHistory
+import { useNavigate, Link } from "react-router-dom"; // Use useNavigate instead of useHistory
 import Navbar from "../components/Navbar";
 import CartItems from "../components/CartItems";
 import Footer from "../components/Footer";
@@ -10,9 +10,9 @@ import { toast } from "react-toastify"; // Import toast for notifications
 import "../components/cloth.css";
 
 const Cart = () => {
-  const navigate = useNavigate(); // Initialize useNavigate for navigation
-  const cartItemsFromRedux = useSelector((state) => state.cart.cart || []); // Get cart items from Redux store
-  const cartItemsFromLocalStorage = JSON.parse(localStorage.getItem('cart')) || []; // Get cart items from local storage
+  const navigate = useNavigate();
+  const cartItemsFromRedux = useSelector((state) => state.cart.cart || []);
+  const cartItemsFromLocalStorage = JSON.parse(localStorage.getItem('cart')) || []; 
   const cartItems = cartItemsFromRedux.length > 0 ? cartItemsFromRedux : cartItemsFromLocalStorage; // Use Redux cart items or local storage if Redux is empty
   const isLoggedIn = useSelector((state) => state.userAuth.user.isActive); 
 
@@ -29,7 +29,7 @@ const Cart = () => {
       });
       navigate("/login"); 
     } else {
-      alert("Proceeding to checkout...");
+       navigate('/checkout')
     }
   };
 
@@ -63,6 +63,7 @@ const Cart = () => {
                   img={item.img}
                   rating={item.rating}
                   qty={item.qty}
+                  size={item.size}
                 />
               ))
             ) : (
@@ -81,6 +82,8 @@ const Cart = () => {
               <span className="font-bold text-yellow-600"> ₹{totalPrice.toFixed(2)}</span>
             </p>
           </div>
+
+          <Link to='checkout'>
           <motion.button
             className="w-full mt-4 bg-yellow-500 text-black p-2 rounded-md shadow-md hover:bg-yellow-600 transition duration-300 btn"
             whileHover={{ scale: 1.05 }}
@@ -90,6 +93,8 @@ const Cart = () => {
           >
             Checkout
           </motion.button>
+
+          </Link>
         </div>
       </motion.div>
 

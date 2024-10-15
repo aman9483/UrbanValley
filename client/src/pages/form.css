@@ -51,11 +51,24 @@
   color: white;
   font-size: 16px;
   border: none;
-  border-radius: 4px;
   cursor: pointer;
   transition: background 0.3s ease;
 }
 
 .auth-btn:hover {
   background-color: #2980b9;
+}
+
+.btn2{
+
+   background-color: blue;
+   color: white;
+}
+
+.btn2:hover{
+
+  background-color: orange;
+  color: white;
+  transition: 0.3s ease;
+
 }

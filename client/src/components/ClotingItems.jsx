@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../redux/action/product"; // Import the action to fetch products
-import ClothingCard from "./ClotingCard"; // Update to your ClothingCard component
-import {  ToastContainer } from 'react-toastify';
+import ClothingCard from "./ClotingCard"; 
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
 
 const filterOptions = {
   categories: ["Men", "Women", "Kids"],
@@ -17,9 +16,10 @@ const ClothingShop = () => {
   const dispatch = useDispatch();
 
   // Accessing the products from the Redux store
-  const { loading, products, error } = useSelector((state) => state.productList); // Corrected line
+  const { loading, products, error } = useSelector((state) => state.productList);
 
   const [filteredData, setFilteredData] = useState(products);
+  const [searchQuery, setSearchQuery] = useState(""); // For search functionality
   const [selectedFilters, setSelectedFilters] = useState({
     categories: [],
     priceRange: [],
@@ -32,8 +32,8 @@ const ClothingShop = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    setFilteredData(products); // Update filtered data when products change
-  }, [products]);
+    applyFilters(selectedFilters, searchQuery); // Apply filters and search
+  }, [products, searchQuery]);
 
   const handleFilterChange = (type, value) => {
     setSelectedFilters((prev) => {
@@ -41,19 +41,24 @@ const ClothingShop = () => {
       newFilters[type] = prev[type].includes(value)
         ? prev[type].filter((item) => item !== value)
         : [...prev[type], value];
-      applyFilters(newFilters); // Apply filters whenever the state changes
+      applyFilters(newFilters, searchQuery); // Apply filters whenever the state changes
       return newFilters;
     });
   };
 
-  const applyFilters = (currentFilters) => {
+  const applyFilters = (currentFilters, query) => {
     const filtered = products.filter((item) => {
-      return (
+      const matchesFilters =
         (currentFilters.categories.length === 0 || currentFilters.categories.includes(item.category)) &&
         (currentFilters.priceRange.length === 0 || applyPriceRangeFilter(item.price, currentFilters.priceRange)) &&
         (currentFilters.clothingTypes.length === 0 || currentFilters.clothingTypes.includes(item.ProductType)) &&
-        (currentFilters.sizes.length === 0 || currentFilters.sizes.includes(item.ProductSize))
-      );
+        (currentFilters.sizes.length === 0 || currentFilters.sizes.includes(item.ProductSize));
+
+      const matchesSearch =
+        item.productName.toLowerCase().includes(query.toLowerCase()) ||
+        item.description.toLowerCase().includes(query.toLowerCase());
+
+      return matchesFilters && matchesSearch;
     });
     setFilteredData(filtered);
   };
@@ -73,17 +78,27 @@ const ClothingShop = () => {
   return (
     <div className="flex flex-col lg:mx-20 py-4">
       {/* Header */}
-      <span className="flex items-center justify-center lg:w-full lg:h[100vw] lg:my-14">
+      <span className="flex items-center justify-center lg:w-full lg:my-14">
         <h1 className="text-2xl font-bold lg:text-5xl">
-          Our <span className="font-serif text-yellow">Urban Clothing</span>{" "}
-          Collections
+          Our <span className="font-serif text-yellow">Urban Clothing</span> Collections
         </h1>
       </span>
 
+      {/* Search Bar */}
+      <div className="flex justify-center w-full px-4 py-2">
+        <input
+          type="text"
+          className="w-full max-w-lg p-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          placeholder="Search clothing..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </div>
+
       {/* Filter Options */}
-      <div className="flex flex-wrap mb-4 gap-6 w-full bg-gray-100 p-4 rounded-lg shadow-md">
+      <div className="flex flex-wrap gap-6 w-full bg-gray-100 p-4 rounded-lg shadow-md">
         {/* Categories Filter */}
-        <div className="flex gap-4">
+        <div className="flex flex-col gap-2">
           <span className="font-semibold text-lg text-gray-700">Categories:</span>
           {filterOptions.categories.map((category) => (
             <label key={category} className="flex items-center cursor-pointer text-gray-600 hover:text-yellow-600">
@@ -92,13 +107,13 @@ const ClothingShop = () => {
                 className="mr-2 accent-yellow-500"
                 onChange={() => handleFilterChange("categories", category)}
               />
-              <span className="hover:underline">{category}</span>
+              {category}
             </label>
           ))}
         </div>
 
         {/* Price Range Filter */}
-        <div className="flex gap-4">
+        <div className="flex flex-col gap-2">
           <span className="font-semibold text-lg text-gray-700">Price Range:</span>
           {filterOptions.priceRange.map((price) => (
             <label key={price} className="flex items-center cursor-pointer text-gray-600 hover:text-yellow-600">
@@ -107,13 +122,13 @@ const ClothingShop = () => {
                 className="mr-2 accent-yellow-500"
                 onChange={() => handleFilterChange("priceRange", price)}
               />
-              <span className="hover:underline">{price}</span>
+              {price}
             </label>
           ))}
         </div>
 
         {/* Clothing Types Filter */}
-        <div className="flex gap-4">
+        <div className="flex flex-col gap-2">
           <span className="font-semibold text-lg text-gray-700">Clothing Types:</span>
           {filterOptions.clothingTypes.map((type) => (
             <label key={type} className="flex items-center cursor-pointer text-gray-600 hover:text-yellow-600">
@@ -122,13 +137,13 @@ const ClothingShop = () => {
                 className="mr-2 accent-yellow-500"
                 onChange={() => handleFilterChange("clothingTypes", type)}
               />
-              <span className="hover:underline">{type}</span>
+              {type}
             </label>
           ))}
         </div>
 
         {/* Sizes Filter */}
-        <div className="flex gap-4">
+        <div className="flex flex-col gap-2">
           <span className="font-semibold text-lg text-gray-700">Sizes:</span>
           {filterOptions.sizes.map((size) => (
             <label key={size} className="flex items-center cursor-pointer text-gray-600 hover:text-yellow-600">
@@ -137,7 +152,7 @@ const ClothingShop = () => {
                 className="mr-2 accent-yellow-500"
                 onChange={() => handleFilterChange("sizes", size)}
               />
-              <span className="hover:underline">{size}</span>
+              {size}
             </label>
           ))}
         </div>
@@ -148,13 +163,13 @@ const ClothingShop = () => {
         {filteredData.map((clothing) => (
           <ClothingCard
             key={clothing._id}
-            id={clothing._id} 
-            name={clothing.productName} 
+            id={clothing._id}
+            name={clothing.productName}
             price={clothing.price}
             desc={clothing.description}
             rating={clothing.rating}
-            img={clothing.image} 
-            sizes={['XS', 'S', 'M', 'L', 'XL']}
+            img={clothing.image}
+            sizes={["XS", "S", "M", "L", "XL"]}
           />
         ))}
       </div>

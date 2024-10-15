@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
-import HeroLogo from "../assets/hero_img.jpg"; // Replace with your image path
+import HeroLogo from "../assets/hero_img.jpg";
+import '../pages/form.css'
 
 const Hero = () => {
   return (
@@ -86,7 +87,7 @@ const Hero = () => {
           >
             <motion.button
               type="button"
-              className="px-6 py-3 text-sm font-medium text-black bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 rounded-full shadow-lg hover:from-pink-600 hover:to-yellow-600 focus:ring-2 focus:ring-offset-2 focus:ring-pink-400"
+              className="px-6 py-3 text-sm font-medium text-black bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 rounded-full shadow-lg hover:from-pink-600 hover:to-yellow-600 focus:ring-2 focus:ring-offset-2 focus:ring-pink-400 "
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
             >
@@ -94,7 +95,7 @@ const Hero = () => {
             </motion.button>
             <motion.button
               type="button"
-              className="px-6 py-3 text-sm font-medium text-black bg-gradient-to-r from-green-400 via-teal-500 to-blue-500 rounded-full shadow-lg hover:from-green-500 hover:to-blue-600 focus:ring-2 focus:ring-offset-2 focus:ring-green-400"
+              className="px-6 py-3 text-sm font-medium text-black bg-gradient-to-r from-green-400 via-teal-500 to-blue-500 rounded-full shadow-lg hover:from-green-500 hover:to-blue-600 focus:ring-2 focus:ring-offset-2 focus:ring-green-400 "
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
             >
