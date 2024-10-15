@@ -192,7 +192,7 @@ const BillingForm = () => {
           className="w-full py-3 bg-yellow-500 text-black font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition-all duration-300 ease-in-out btn"
           whileHover={{ scale: 1.02 }}
         >
-          Submit Billing Info
+          Continue
         </motion.button>
       </form>
 
